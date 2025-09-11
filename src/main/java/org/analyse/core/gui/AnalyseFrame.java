@@ -223,12 +223,11 @@ public class AnalyseFrame extends JFrame {
 		if (!validProperties())
 			initProperties();
 
-		this.setBounds(new Integer(props.getProperty("X")).intValue(),
-				new Integer(props.getProperty("Y")).intValue(), new Integer(
-						props.getProperty("width")).intValue(), new Integer(
-						props.getProperty("height")).intValue());
-		toolbar.setTreeSelected(new Boolean(props.getProperty("tree"))
-				.booleanValue());
+		this.setBounds(Integer.parseInt(props.getProperty("X")),
+				Integer.parseInt(props.getProperty("Y")),
+				Integer.parseInt(props.getProperty("width")),
+				Integer.parseInt(props.getProperty("height")));
+		toolbar.setTreeSelected(Boolean.parseBoolean(props.getProperty("tree")));
 		this.showHideNavigator();
 	}
 
@@ -282,7 +281,7 @@ public class AnalyseFrame extends JFrame {
 	/**
 	 * Modifie le panel courant.
 	 * 
-	 * @param c
+	 * @param panelCurrent
 	 *            nouveau panel
 	 */
 	public void setPanel(AnalysePanel panelCurrent) {

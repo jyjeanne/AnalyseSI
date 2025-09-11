@@ -78,9 +78,50 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <!-- Réduire la verbosité des avertissements -->
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+
+                            <!-- Filtres pour exclure les fichiers problématiques -->
+                            <filters>
+                                <!-- Exclure les MANIFEST.MF des dépendances externes -->
+                                <filter>
+                                    <artifact>com.jgoodies:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <!-- Exclure les fichiers de signature -->
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <!-- Exclure les fichiers de licence dupliqués -->
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/DEPENDENCIES*</exclude>
+                                        <!-- Exclure les fichiers Maven -->
+                                        <exclude>META-INF/maven/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
                             <transformers>
+                                <!-- Transformer pour le manifeste -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.analyse.main.Main</mainClass>
+                                </transformer>
+
+                                <!-- Transformer pour les services (si nécessaire) -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+
+                                <!-- Transformer pour les fichiers de propriétés (concaténation) -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
                                 </transformer>
                             </transformers>
                         </configuration>

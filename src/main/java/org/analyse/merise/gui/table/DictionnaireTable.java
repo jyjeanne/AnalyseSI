@@ -145,8 +145,8 @@ public class DictionnaireTable extends AbstractTableModel
         tab[0] = "";
         tab[1] = "";
         tab[2] = types.get(0);
-        tab[3] = new Integer(0);
-        tab[4] = new Boolean(false);
+        tab[3] = Integer.valueOf(0);
+        tab[4] = Boolean.valueOf(false);
         tab[5] = "";
 
         rows.add(tab);
@@ -166,12 +166,12 @@ public class DictionnaireTable extends AbstractTableModel
 
         //Bug #612891
         try {
-            tab[3] = new Integer (taille) ;
+            tab[3] = Integer.valueOf(taille);
         } catch (Exception e) {
-            tab[3] = new Integer (0) ;
+            tab[3] = Integer.valueOf(0);
         }
 
-        tab[4] = new Boolean(utilise);
+        tab[4] = Boolean.valueOf(utilise);
         tab[5] = "";
         rows.set(rows.size()-1, tab);
         addNewLine();
@@ -182,9 +182,9 @@ public class DictionnaireTable extends AbstractTableModel
         Integer tailleInt;
 
         try {
-            tailleInt = new Integer(taille);
+            tailleInt = Integer.valueOf(taille);
         } catch (NumberFormatException e) {
-            tailleInt = new Integer(0);
+            tailleInt = Integer.valueOf(0);
         }
 
         if (!contains(Utilities.normaliseString(nom, Constantes.LOWER))) {
@@ -193,7 +193,7 @@ public class DictionnaireTable extends AbstractTableModel
             tab[1] = Utilities.normaliseString(nom,Constantes.LOWER) + "_" + entity;
             tab[2] = type;
             tab[3] = tailleInt;
-            tab[4] = new Boolean(false);
+            tab[4] = Boolean.valueOf(false);
             tab[5] = entity;
             rows.set(rows.size()-1, tab);
             addNewLine();
@@ -322,7 +322,7 @@ public class DictionnaireTable extends AbstractTableModel
         if (row == -1)
             return;
 
-        rows.get(row)[USE] = new Boolean(use);
+        rows.get(row)[USE] = Boolean.valueOf(use);
 
     }
 
@@ -472,7 +472,7 @@ public class DictionnaireTable extends AbstractTableModel
         // Transforme la chaine de caractère en Integer
         if (rows.get(0)[col] instanceof Integer && value instanceof String) {
             try {
-                rows.get(row)[col] = new Integer(value.toString());
+                rows.get(row)[col] = Integer.valueOf(value.toString());
             } catch (NumberFormatException e) {
             }
         } else {

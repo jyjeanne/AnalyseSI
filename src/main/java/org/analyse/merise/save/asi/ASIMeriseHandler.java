@@ -77,20 +77,20 @@ public class ASIMeriseHandler extends ASIModuleHandler
 
         if ("ENTITE".equalsIgnoreCase(name)) {
             lastObj = new MCDEntite(mcd, hashtable.get("nom"),
-                    (new Integer(hashtable.get("x"))).intValue(),
-                    (new Integer(hashtable.get("y"))).intValue());
-            lastObj.setPosition(new Point(new Integer(hashtable
-                    .get("x")).intValue(), new Integer(hashtable
-                    .get("y")).intValue()));
+                    Integer.parseInt(hashtable.get("x")),
+                    Integer.parseInt(hashtable.get("y")));
+            lastObj.setPosition(new Point(Integer.parseInt(hashtable
+                    .get("x")), Integer.parseInt(hashtable
+                    .get("y"))));
             mcd.addObjet(lastObj);
 
         } else if ("ASSOCIATION".equalsIgnoreCase(name)) {
             lastObj = new MCDAssociation(mcd, hashtable.get("nom"),
-                    (new Integer(hashtable.get("x"))).intValue(),
-                    (new Integer(hashtable.get("y"))).intValue());
-            lastObj.setPosition(new Point(new Integer(hashtable
-                    .get("x")).intValue(), new Integer(hashtable
-                    .get("y")).intValue()));
+                    Integer.parseInt(hashtable.get("x")),
+                    Integer.parseInt(hashtable.get("y")));
+            lastObj.setPosition(new Point(Integer.parseInt(hashtable
+                    .get("x")), Integer.parseInt(hashtable
+                    .get("y"))));
             mcd.addObjet(lastObj);
         }
     }

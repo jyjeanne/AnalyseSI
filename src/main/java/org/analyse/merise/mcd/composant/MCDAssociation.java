@@ -61,6 +61,11 @@ public class MCDAssociation extends MCDObjet
      */
     public void updateSize()
     {
+        if (fm == null) {
+            this.font = mcd.getFont();
+            this.fm = mcd.getFontMetrics(font);
+        }
+
         int gw = fm.stringWidth(name);
 
         for (int i = 0; i < sizeInformation(); i++)
@@ -78,8 +83,7 @@ public class MCDAssociation extends MCDObjet
     /**
      * Affichage de l'association.
      */
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         if (fm == null) {
             this.font = mcd.getFont();
             this.fm = mcd.getFontMetrics(font);
@@ -103,11 +107,9 @@ public class MCDAssociation extends MCDObjet
         g2d.drawString(name, (getX() + getWidth() / 2) - fm.stringWidth(name)
                 / 2, getY() + 15);
 
-        for (int i = 0; i < sizeInformation(); i++)
-            g2d.drawString((String) (data.getValue(getCodeInformation(i),
-                    DictionnaireTable.NAME)), getX() + 10, getY() + 40 + i
-                    * (fm.getMaxDescent() + 15));
-
+        for (int i = 0; i < sizeInformation(); i++) {
+            g2d.drawString((String) (data.getValue(getCodeInformation(i), DictionnaireTable.NAME)), getX() + 10, getY() + 40 + i * (fm.getMaxDescent() + 15));
+        }
     }
 
     /**
