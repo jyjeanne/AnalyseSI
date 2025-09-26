@@ -49,6 +49,7 @@ import org.analyse.core.util.save.Open;
 import org.analyse.core.util.save.Save;
 import org.analyse.main.Main;
 import org.analyse.core.context.ApplicationContext;
+import org.analyse.merise.main.MeriseModule;
 
 import org.analyse.xml.XmlException;
 import org.analyse.xml.XmlParser;
@@ -131,6 +132,9 @@ public class FiltreASI extends AnalyseFilter implements Save, Open, Runnable
         } else //if (action == OPEN)
 
         {
+            // Ensure required modules are initialized before parsing ASI files
+            ensureModulesInitialized();
+
             try {
             	InputStream inStream = new GZIPInputStream(new FileInputStream(file));
                 BufferedReader in = new BufferedReader(new InputStreamReader(inStream, Constantes.ASI_ENCODING));
@@ -178,6 +182,31 @@ public class FiltreASI extends AnalyseFilter implements Save, Open, Runnable
         //Thread t = new Thread(this);
         //t.start();
         run();
+    }
+
+    /**
+     * Ensure that required modules are initialized before parsing ASI files.
+     * This prevents NullPointerExceptions when ASI files reference modules that haven't been loaded.
+     */
+    private void ensureModulesInitialized() {
+        ApplicationContext context = ApplicationContext.getInstance();
+
+        try {
+            // Check if MERISE module exists, if not create it
+            if (context.getModule("MERISE") == null) {
+                logger.log(Level.INFO, "Initializing MERISE module for ASI file parsing");
+                MeriseModule meriseModule = new MeriseModule();
+                context.addModule(meriseModule);
+            }
+
+            // Additional modules can be added here as needed
+            // For example, if there are other types of modules in ASI files
+
+            logger.log(Level.INFO, "Module initialization completed. Available modules: " + context.getModules().keySet());
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error initializing modules for ASI file parsing", e);
+        }
     }
 
     /**

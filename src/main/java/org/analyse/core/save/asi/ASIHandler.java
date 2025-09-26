@@ -72,8 +72,25 @@ public class ASIHandler extends HandlerBase
 
         if (name.equals("module")) {
             currentModule = Main.getModule(id.toUpperCase());
-            asiModuleHandler = ((FilterASIModule) (currentModule
-                    .getFiltre("ASI"))).getASIHandler();
+
+            if (currentModule == null) {
+                logger.log(Level.WARNING, "Module not found for id: " + id + ". This ASI file may not be loaded correctly.");
+                return;
+            }
+
+            try {
+                FilterASIModule filterModule = (FilterASIModule) currentModule.getFiltre("ASI");
+                if (filterModule == null) {
+                    logger.log(Level.WARNING, "ASI filter not found for module: " + id);
+                    currentModule = null;
+                    return;
+                }
+                asiModuleHandler = filterModule.getASIHandler();
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Error initializing ASI handler for module: " + id, e);
+                currentModule = null;
+                return;
+            }
 
         } else if (currentModule != null) {
             asiModuleHandler.startElement(name);
