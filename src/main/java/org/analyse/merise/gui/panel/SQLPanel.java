@@ -259,7 +259,7 @@ public class SQLPanel extends AnalysePanel
 	}
 
 	public void cut() {
-		//System.out.println("Cut");
+		// Cut operation not implemented for SQL panel
 	}
 
 	public void copy() {
@@ -267,7 +267,7 @@ public class SQLPanel extends AnalysePanel
 	}
 
 	public void paste() {
-		//System.out.println("Paste");
+		// Paste operation not implemented for SQL panel
 	}
 
 	private String chooseFile() {

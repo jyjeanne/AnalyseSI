@@ -22,6 +22,8 @@ package org.analyse.core.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.analyse.core.modules.AnalysePanel;
 import org.analyse.core.modules.ClipboardInterface;
@@ -32,6 +34,7 @@ import org.analyse.main.Main;
 
 public class MainActionListener implements ActionListener
 {
+    private static final Logger logger = Logger.getLogger(MainActionListener.class.getName());
     public void actionPerformed(ActionEvent e)
     {
         String action = e.getActionCommand();
@@ -48,7 +51,7 @@ public class MainActionListener implements ActionListener
                 u = (UndoInterface) p;
                 u.undo();
             } catch (ClassCastException exp) {
-                System.err.println(exp);
+                logger.log(Level.WARNING, "Panel does not implement expected interface", exp);
             }
         } else if (action.equals(Constantes.REDO)) {
             UndoInterface u;
@@ -57,7 +60,7 @@ public class MainActionListener implements ActionListener
                 u = (UndoInterface) p;
                 u.redo();
             } catch (ClassCastException exp) {
-                System.err.println(exp);
+                logger.log(Level.WARNING, "Panel does not implement expected interface", exp);
             }
         } else if (action.equals(Constantes.CUT)) {
             ClipboardInterface c;
@@ -66,7 +69,7 @@ public class MainActionListener implements ActionListener
                 c = (ClipboardInterface) p;
                 c.cut();
             } catch (ClassCastException exp) {
-                System.err.println(exp);
+                logger.log(Level.WARNING, "Panel does not implement expected interface", exp);
             }
         } else if (action.equals(Constantes.COPY)) {
             ClipboardInterface c;
@@ -74,7 +77,7 @@ public class MainActionListener implements ActionListener
                 c = (ClipboardInterface) p;
                 c.copy();
             } catch (ClassCastException exp) {
-                System.err.println(exp);
+                logger.log(Level.WARNING, "Panel does not implement expected interface", exp);
             }
         } else if (action.equals(Constantes.PASTE)) {
             ClipboardInterface c;
@@ -83,7 +86,7 @@ public class MainActionListener implements ActionListener
                 c = (ClipboardInterface) p;
                 c.paste();
             } catch (ClassCastException exp) {
-                System.err.println(exp);
+                logger.log(Level.WARNING, "Panel does not implement expected interface", exp);
             }
         } else if (action.equals(Constantes.NEW)) {
             AnalyseSave s = Main.analyseFrame.getAnalyseSave();

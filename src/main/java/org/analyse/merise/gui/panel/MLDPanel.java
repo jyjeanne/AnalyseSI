@@ -83,7 +83,7 @@ public class MLDPanel  extends AnalysePanel implements Observer, ClipboardInterf
 	private Map requestsColorized;
 
 	public void cut() {
-		//System.out.println("Cut");
+		// Cut operation not implemented for MLD panel
 	}
 
 	public MLDPanel(MLDCommand mldCommand) {
@@ -198,7 +198,7 @@ public class MLDPanel  extends AnalysePanel implements Observer, ClipboardInterf
 	}
 
 	public void paste() {
-		// System.out.println("Paste");
+		// Paste operation not implemented for MLD panel
 	}
 
 	private String chooseFile() {

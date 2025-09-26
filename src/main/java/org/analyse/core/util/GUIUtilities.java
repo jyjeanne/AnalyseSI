@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -40,6 +42,8 @@ import org.analyse.main.Main;
 
 public final class GUIUtilities
 {
+	private static final Logger logger = Logger.getLogger(GUIUtilities.class.getName());
+
 	/**
 	 * Don't let anyone instantiate this class.
 	 */
@@ -125,10 +129,10 @@ public final class GUIUtilities
 
 		URL url = GUIUtilities.class.getClassLoader().getResource("images/" + name);
 		if (url == null) {
-			System.err.println("Image non trouvée : " + name + ", utilisation de l'image par défaut");
+			logger.log(Level.WARNING, "Image non trouvée : " + name + ", utilisation de l'image par défaut");
 			url = GUIUtilities.class.getClassLoader().getResource("images/home.png");
 			if (url == null) {
-				System.err.println("Image par défaut non trouvée : home.png");
+				logger.log(Level.SEVERE, "Image par défaut non trouvée : home.png");
 				return null;
 			}
 		}
@@ -155,8 +159,8 @@ public final class GUIUtilities
 
 		if (is == null)
 		{
-			System.err.println("Utilisation de la Fonte impossible : " + name + " ...");
-			System.exit(1);
+			logger.log(Level.SEVERE, "Utilisation de la Fonte impossible : " + name + " ...");
+			throw new RuntimeException("Font resource not found: " + name);
 		}
 
 		try {
@@ -164,8 +168,8 @@ public final class GUIUtilities
 			fonts.put(name, font);
 			is.close();
 		} catch (Exception e) {
-			System.err.println("Problème lors de la création de la fonte : " + name + " ..." );
-			System.exit(1);
+			logger.log(Level.SEVERE, "Problème lors de la création de la fonte : " + name, e);
+			throw new RuntimeException("Font creation failed: " + name, e);
 		}
 		return font;
 	}

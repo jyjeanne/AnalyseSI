@@ -113,7 +113,7 @@ public class AboutWindow extends JDialog implements ActionListener
         URL url = AboutWindow.class.getClassLoader().getResource("help/author.html");
 
         if (url == null) {
-            System.err.println("Fichier author.html non trouvé dans resources/help/");
+            logger.log(Level.WARNING, "Fichier author.html non trouvé dans resources/help/");
             return panel;
         }
 
@@ -124,7 +124,7 @@ public class AboutWindow extends JDialog implements ActionListener
 
             panel.add(new JScrollPane(editor), BorderLayout.CENTER);
         } catch (IOException e) {
-            System.err.println("Erreur lors du chargement de author.html : " + e.getMessage());
+            logger.log(Level.WARNING, "Erreur lors du chargement de author.html", e);
         }
 
         return panel;
@@ -140,7 +140,7 @@ public class AboutWindow extends JDialog implements ActionListener
         URL url = AboutWindow.class.getClassLoader().getResource("help/GPL.html");
 
         if (url == null) {
-            System.err.println("Fichier GPL.html non trouvé dans resources/help/");
+            logger.log(Level.WARNING, "Fichier GPL.html non trouvé dans resources/help/");
             return panel;
         }
 
@@ -151,7 +151,7 @@ public class AboutWindow extends JDialog implements ActionListener
             panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
             panel.add(new JScrollPane(editor), BorderLayout.CENTER);
         } catch (IOException e) {
-            System.err.println("Erreur lors du chargement de GPL.html : " + e.getMessage());
+            logger.log(Level.WARNING, "Erreur lors du chargement de GPL.html", e);
         }
 
         return panel;

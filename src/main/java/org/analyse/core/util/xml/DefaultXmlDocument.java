@@ -22,6 +22,8 @@ package org.analyse.core.util.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,6 +40,7 @@ import org.xml.sax.SAXParseException;
 
 public class DefaultXmlDocument
 {
+    private static final Logger logger = Logger.getLogger(DefaultXmlDocument.class.getName());
     private Document document;
 
     private File file;
@@ -68,19 +71,16 @@ public class DefaultXmlDocument
                 public void warning(SAXParseException err)
                         throws SAXParseException
                 {
-                    System.out.println("** Warning" + ", line "
-                            + err.getLineNumber() + ", uri "
-                            + err.getSystemId());
-                    System.out.println("   " + err.getMessage());
+                    logger.log(Level.WARNING, "XML parsing warning at line " + err.getLineNumber() +
+                            ", uri " + err.getSystemId() + ": " + err.getMessage());
                 }
             });
 
             document = builder.parse(file);
 
         } catch (SAXParseException spe) {
-            System.out.println("\n** Parsing error" + ", line "
-                    + spe.getLineNumber() + ", uri " + spe.getSystemId());
-            System.out.println("   " + spe.getMessage());
+            logger.log(Level.SEVERE, "XML parsing error at line " + spe.getLineNumber() +
+                    ", uri " + spe.getSystemId() + ": " + spe.getMessage(), spe);
 
             Exception x = spe;
             if (spe.getException() != null)
@@ -113,7 +113,7 @@ public class DefaultXmlDocument
             transformer.transform(source, result);
 
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            logger.log(Level.SEVERE, "Error saving XML document", ex);
         }
     }
 

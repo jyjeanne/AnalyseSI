@@ -22,6 +22,8 @@ package org.analyse.core.save.asi;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.analyse.core.modules.AnalyseModule;
 
@@ -30,6 +32,7 @@ import org.analyse.main.Main;
 
 public class ASIHandler extends HandlerBase
 {
+    private static final Logger logger = Logger.getLogger(ASIHandler.class.getName());
     private Deque<String> stack;
 
     private AnalyseModule currentModule;
@@ -92,7 +95,8 @@ public class ASIHandler extends HandlerBase
             }
 
             stack.removeFirst();
-        } else
-            System.err.println("Unclosed tag: " + stack.peekFirst());
+        } else {
+            logger.log(Level.WARNING, "Unclosed XML tag detected: " + stack.peekFirst());
+        }
     }
 }

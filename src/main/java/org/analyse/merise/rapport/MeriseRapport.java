@@ -28,6 +28,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -49,6 +51,7 @@ import javax.imageio.ImageIO;
 
 public class MeriseRapport
 {
+    private static final Logger logger = Logger.getLogger(MeriseRapport.class.getName());
     private MeriseModule meriseModule;
     private File tempFile;
     private String tempDir;
@@ -101,8 +104,7 @@ public class MeriseRapport
 			return tempFile.toURL();
 			
         } catch (IOException e) {
-            System.err.println(e);
-            
+            logger.log(Level.SEVERE, "Error creating rapport HTML file", e);
         }
         
         return null;

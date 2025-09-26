@@ -155,7 +155,7 @@ public class HelpPanel extends AnalysePanel implements HyperlinkListener,
 
     public void cut()
     {
-        //System.out.println("Cut");
+        // Cut operation not implemented for Help panel
     }
 
     public void copy()
@@ -165,7 +165,7 @@ public class HelpPanel extends AnalysePanel implements HyperlinkListener,
 
     public void paste()
     {
-        //System.out.println("Paste");
+        // Paste operation not implemented for Help panel
     }
 
     public void hyperlinkUpdate(HyperlinkEvent e)

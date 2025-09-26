@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.analyse.core.modules.AnalyseModule;
 import org.analyse.core.modules.FilterModule;
@@ -57,7 +59,8 @@ import org.analyse.xml.XmlParser;
  * XML.
  */
 public class FiltreASI extends AnalyseFilter implements Save, Open, Runnable
-{	
+{
+    private static final Logger logger = Logger.getLogger(FiltreASI.class.getName());
     private static final boolean OPEN = true;
 
     private static final boolean SAVE = false;
@@ -138,10 +141,9 @@ public class FiltreASI extends AnalyseFilter implements Save, Open, Runnable
                 try {
                     parser.parse(null, null, in);
                 } catch (XmlException e) {
-                    System.err.println(e);
+                    logger.log(Level.SEVERE, "XML parsing error while opening ASI file", e);
                 } catch (Exception e) {
-                    // Should NEVER happend !
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "Unexpected error while parsing ASI file", e);
                 }
 
                 in.close();
