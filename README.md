@@ -3,7 +3,7 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://www.java.com)
 [![Maven](https://img.shields.io/badge/Maven-3.6%2B-C71A36.svg)](https://maven.apache.org/)
-[![CI/CD](https://github.com/analysesi/analysesi/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/analysesi/analysesi/actions)
+[![CI/CD](https://github.com/jyjeanne/AnalyseSI/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/jyjeanne/AnalyseSI/actions)
 
 ## Description
 
@@ -31,7 +31,7 @@ AnalyseSI vous permet de modéliser votre base de données à l'aide de la méth
 
 ### Option 1: Download Pre-built JAR
 
-Download the latest release from the [Releases page](https://github.com/analysesi/analysesi/releases)
+Download the latest release from the [Releases page](https://github.com/jyjeanne/AnalyseSI/releases)
 
 ```bash
 java -jar analyse-si-1.0-SNAPSHOT.jar
@@ -41,7 +41,7 @@ java -jar analyse-si-1.0-SNAPSHOT.jar
 
 ```bash
 # Clone the repository
-git clone https://github.com/analysesi/analysesi.git
+git clone https://github.com/jyjeanne/AnalyseSI.git
 cd analysesi
 
 # Build with Maven
@@ -120,7 +120,7 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of contributors to this projec
 - **Mailing List**: analysesi@lists.launchpad.net
 - **Twitter**: [@analysesi](http://twitter.com/analysesi)
 - **Launchpad**: [https://launchpad.net/analysesi](https://launchpad.net/analysesi)
-- **Issues**: [GitHub Issues](https://github.com/analysesi/analysesi/issues)
+- **Issues**: [GitHub Issues](https://github.com/jyjeanne/AnalyseSI/issues)
 
 ## 📝 License
 
@@ -179,7 +179,7 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 
 <p align="center">
   <a href="http://www.analysesi.com">Website</a> •
-  <a href="https://github.com/analysesi/analysesi/wiki">Wiki</a> •
-  <a href="https://github.com/analysesi/analysesi/issues">Report Bug</a> •
-  <a href="https://github.com/analysesi/analysesi/issues">Request Feature</a>
+  <a href="https://github.com/jyjeanne/AnalyseSI/wiki">Wiki</a> •
+  <a href="https://github.com/jyjeanne/AnalyseSI/issues">Report Bug</a> •
+  <a href="https://github.com/jyjeanne/AnalyseSI/issues">Request Feature</a>
 </p>
