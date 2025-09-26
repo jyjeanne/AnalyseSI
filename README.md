@@ -112,11 +112,11 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of contributors to this projec
 
 ### Main Contributors
 - **Loic Dreux** - Core development
-- **Jean-Baptiste** - Refactoring and modernization
+- **Jeremy Jeanne** - Refactoring and modernization
 
 ## 📬 Community & Support
 
-- **Website**: [http://www.analysesi.com](http://www.analysesi.com)
+- **Website**: [https://launchpad.net/analysesi](hhttps://launchpad.net/analysesi)
 - **Mailing List**: analysesi@lists.launchpad.net
 - **Twitter**: [@analysesi](http://twitter.com/analysesi)
 - **Launchpad**: [https://launchpad.net/analysesi](https://launchpad.net/analysesi)
