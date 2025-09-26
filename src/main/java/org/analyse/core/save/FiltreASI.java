@@ -46,6 +46,7 @@ import org.analyse.core.util.save.AnalyseFilter;
 import org.analyse.core.util.save.Open;
 import org.analyse.core.util.save.Save;
 import org.analyse.main.Main;
+import org.analyse.core.context.ApplicationContext;
 
 import org.analyse.xml.XmlException;
 import org.analyse.xml.XmlParser;
@@ -98,22 +99,24 @@ public class FiltreASI extends AnalyseFilter implements Save, Open, Runnable
 
                 AnalyseModule mod;
                 FilterModule fm;
-                
-                Iterator<Entry<String, AnalyseModule>> e = Main.modules.entrySet().iterator();
-                while ( e.hasNext() ) {
-                    mod = e.next().getValue();
 
-                    out.println("<module id=\"" + mod.getID().toLowerCase()
-                            + "\">");
+                ApplicationContext context = ApplicationContext.getInstance();
+                if (context != null && context.isInitialized()) {
+                    Iterator<Entry<String, AnalyseModule>> e = context.getModules().entrySet().iterator();
+                    while ( e.hasNext() ) {
+                        mod = e.next().getValue();
 
-                    fm = mod.getFiltre(ID);
-                    if (fm != null && fm.canSave())
-                        ((SaveModule) fm).save(out);
+                        out.println("<module id=\"" + mod.getID().toLowerCase()
+                                + "\">");
 
-                    out.println("</module>");
+                        fm = mod.getFiltre(ID);
+                        if (fm != null && fm.canSave())
+                            ((SaveModule) fm).save(out);
 
+                        out.println("</module>");
+                    }
                 }
-                
+
                 out.println("</analyse>");
 
                 out.flush();

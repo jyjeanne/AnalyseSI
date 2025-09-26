@@ -50,6 +50,7 @@ import org.analyse.core.util.Constantes;
 import org.analyse.core.util.GUIUtilities;
 import org.analyse.core.util.Utilities;
 import org.analyse.main.Main;
+import org.analyse.core.context.ApplicationContext;
 
 /**
  * Cette class contient toute les méthodes pour gérer la sauvegarde des données :
@@ -204,9 +205,12 @@ public class AnalyseSave {
             return;
 
         AnalyseModule mod;
-        for (Iterator<Entry<String, AnalyseModule>> e = Main.modules.entrySet().iterator(); e.hasNext();) {
-            mod = e.next().getValue();
-            mod.clear();
+        ApplicationContext context = ApplicationContext.getInstance();
+        if (context != null && context.isInitialized()) {
+            for (Iterator<Entry<String, AnalyseModule>> e = context.getModules().entrySet().iterator(); e.hasNext();) {
+                mod = e.next().getValue();
+                mod.clear();
+            }
         }
 
         this.setSave ( true ) ; 
@@ -271,9 +275,12 @@ public class AnalyseSave {
     		this.popupSauvegarde () ;  
 
         AnalyseModule mod;
-        for (Iterator<Entry<String, AnalyseModule>>  e = Main.modules.entrySet().iterator(); e.hasNext();) {
-            mod = e.next().getValue();
-            mod.clear();
+        ApplicationContext context = ApplicationContext.getInstance();
+        if (context != null && context.isInitialized()) {
+            for (Iterator<Entry<String, AnalyseModule>>  e = context.getModules().entrySet().iterator(); e.hasNext();) {
+                mod = e.next().getValue();
+                mod.clear();
+            }
         }
 
         this.setSave ( false ) ;

@@ -51,6 +51,7 @@ import org.analyse.core.gui.action.NavigationActionFactory;
 import org.analyse.core.gui.menu.AnalyseMenu;
 import org.analyse.core.gui.panel.HelpPanel;
 import org.analyse.core.gui.panel.Navigator;
+import org.analyse.core.gui.statusbar.AnalyseStatusbar;
 import org.analyse.core.gui.toolbar.AnalyseToolbar;
 import org.analyse.core.modules.AnalysePanel;
 import org.analyse.core.util.Constantes;
@@ -58,6 +59,7 @@ import org.analyse.core.util.GUIUtilities;
 import org.analyse.core.util.Utilities;
 import org.analyse.core.util.save.AnalyseSave;
 import org.analyse.main.Main;
+import org.analyse.core.context.ContextHelper;
 
 /**
  * Fenetre principale d'AnalyseSI
@@ -122,11 +124,11 @@ public class AnalyseFrame extends JFrame {
 		menu = new AnalyseMenu();
 		menu.init();
 		toolbar = new AnalyseToolbar();
-		Main.splash.setProgress(30);
+		ContextHelper.updateSplashProgress(30);
 
 		/* Constuction du Panel d'aide */
 		helpPanel = new HelpPanel();
-		Main.splash.setProgress(40);
+		ContextHelper.updateSplashProgress(40);
 
 		/* Container */
 		Container c = this.getContentPane();
@@ -147,7 +149,7 @@ public class AnalyseFrame extends JFrame {
 		});
 		/* Centre */
 		navigator = new Navigator(this);
-		Main.splash.setProgress(50);
+		ContextHelper.updateSplashProgress(50);
 
 		center = new JPanel(new BorderLayout());
 		center.add(BorderLayout.WEST, navigator);
@@ -157,8 +159,12 @@ public class AnalyseFrame extends JFrame {
 		navigator.setMinimumSize(minimumSize);
 		c.add(BorderLayout.CENTER, center);
 		/* Sud */
-		c.add(BorderLayout.SOUTH, Main.statusbar);
-		Main.splash.setProgress(60);
+		// Add statusbar safely
+		AnalyseStatusbar statusBar = ContextHelper.getStatusbar();
+		if (statusBar != null) {
+			c.add(BorderLayout.SOUTH, statusBar);
+		}
+		ContextHelper.updateSplashProgress(60);
 
 		/* Chargement du panel d'aide */
                 setPanel( helpPanel ) ;
@@ -168,11 +174,11 @@ public class AnalyseFrame extends JFrame {
 		this.setSize(640, 480);
 
 		GUIUtilities.centerComponent(this);
-		Main.splash.setProgress(70);
+		ContextHelper.updateSplashProgress(70);
 
 		/* Gestion des sauvegardes */
 		analyseSave = new AnalyseSave(this);
-		Main.splash.setProgress(80);
+		ContextHelper.updateSplashProgress(80);
 
 		/* Chargement des propriétés */
 		props = new Properties();
@@ -399,8 +405,10 @@ public class AnalyseFrame extends JFrame {
                     lasttyped = 17;
                 }
                 if((int)ke.getKeyCode() == 83 && lasttyped == 17){
-                    AnalyseSave s = Main.analyseFrame.getAnalyseSave();
-                    s.save();
+                    ContextHelper.withMainFrame(frame -> {
+                        AnalyseSave s = frame.getAnalyseSave();
+                        s.save();
+                    });
                 }
                 if((int)ke.getKeyCode() != 17){
                     lasttyped = 0;
