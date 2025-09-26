@@ -178,7 +178,6 @@ public final class GUIUtilities
 	 * Retourne une police de caractères. Par défaut, la taille est de 12.
 	 * @param name nom de la police de caractères.
 	 * @return la police demandée.
-	 * @see openFont(String name)
 	 */
 	public static Font getFont(String name)
 	{
@@ -190,7 +189,6 @@ public final class GUIUtilities
 	 * @param name nom de la police de caractères.
 	 * @param size taille de la police de caractères.
 	 * @return la police demandée.
-	 * @see openFont(String name)
 	 */
 	public static Font getFont(String name, float size)
 	{
@@ -203,7 +201,6 @@ public final class GUIUtilities
 	 * @param style taille de la police de caractères.
 	 * @param size style de la police de caractères.
 	 * @return la police demandée.
-	 * @see openFont(String name)
 	 */
 	public static Font getFont(String name, int style, float size)
 	{

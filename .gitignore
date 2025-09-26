@@ -1,14 +1,165 @@
-*.iml
-.idea
-.settings
-.project
-.classpath
-.project
-.claude
-/build
-/bin
-/doc
-/classes
-/out
-/target
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
 
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# IDE - Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.externalToolBuilders/
+*.launch
+.classpath
+.factorypath
+.buildpath
+.target
+
+# IDE - NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# IDE - Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# IDE - Claude
+.claude/
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Application specific
+*.asi.bak
+*.asi.tmp
+*.asi.lock
+logs/
+temp/
+cache/
+.analysesi/
+workspace.xml
+
+# Test and Coverage
+*.log
+test-output/
+test-results/
+coverage/
+.coverage
+*.cover
+.hypothesis/
+.pytest_cache/
+jacoco.exec
+site/
+
+# Documentation
+javadoc/
+docs/_build/
+doc/
+
+# Package Files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# Backup Files
+*.backup
+*.old
+*~
+*.orig
+
+# Compiled files
+*.com
+*.dll
+*.exe
+*.o
+*.so
+
+# Configuration files (keep templates)
+config.properties
+!config.properties.template
+settings.xml
+!settings.xml.template
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+
+# Temporary files
+*.temp
+*.tmp
+.temp/
+.tmp/
+
+# Build directories
+classes/
+out/
+build/
+
+# User-specific files
+user.properties
+personal/
+
+# Sensitive information
+*.key
+*.pem
+*.pfx
+*.p12
+credentials.json
+secrets.properties
+
+# Build artifacts not needed in repository
+compile.bat
+TestCompile.java
+
+# Local migration and test files
+MIGRATION_GUIDE.md
