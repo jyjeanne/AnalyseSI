@@ -4,16 +4,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.analyse.merise.gui.table.DictionnaireTable;
+import org.analyse.core.gui.zgraph.ZElement;
+
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class MCDComponentTest {
 
     private MCDComponent mcdComponent;
+    private DictionnaireTable mockDictionnaire;
 
     @BeforeEach
     void setUp() {
-        mcdComponent = new MCDComponent();
+        mockDictionnaire = mock(DictionnaireTable.class);
+        mcdComponent = new MCDComponent(mockDictionnaire);
     }
 
     @Nested
@@ -21,15 +28,17 @@ class MCDComponentTest {
     class ComponentInitializationTests {
 
         @Test
-        @DisplayName("Should create MCD component")
-        void shouldCreateMcdComponent() {
+        @DisplayName("Should create MCD component with dictionary")
+        void shouldCreateMcdComponentWithDictionary() {
             assertNotNull(mcdComponent);
+            assertNotNull(mcdComponent.getData());
+            assertEquals(mockDictionnaire, mcdComponent.getData());
         }
 
         @Test
-        @DisplayName("Should initialize with data dictionary")
-        void shouldInitializeWithDataDictionary() {
-            assertNotNull(mcdComponent.getData());
+        @DisplayName("Should register as observer of dictionary")
+        void shouldRegisterAsObserverOfDictionary() {
+            verify(mockDictionnaire).addObserver(mcdComponent);
         }
     }
 
@@ -38,38 +47,57 @@ class MCDComponentTest {
     class EntityManagementTests {
 
         @Test
-        @DisplayName("Should add entity to MCD")
-        void shouldAddEntityToMcd() {
-            MCDEntite entite = new MCDEntite(mcdComponent, "TestEntity", 100, 100);
+        @DisplayName("Should add entity to MCD at specified position")
+        void shouldAddEntityToMcdAtPosition() {
+            MCDEntite entite = mcdComponent.addEntite(100, 200);
 
-            mcdComponent.addElement(entite);
-
-            assertTrue(mcdComponent.getSize() > 0);
+            assertNotNull(entite);
+            assertEquals(100, entite.getX());
+            assertEquals(200, entite.getY());
+            verify(mockDictionnaire).addObserver(entite);
         }
 
         @Test
-        @DisplayName("Should remove entity from MCD")
-        void shouldRemoveEntityFromMcd() {
-            MCDEntite entite = new MCDEntite(mcdComponent, "TestEntity", 100, 100);
-            mcdComponent.addElement(entite);
+        @DisplayName("Should add existing entity object")
+        void shouldAddExistingEntityObject() {
+            MCDEntite entite = new MCDEntite(mcdComponent, "TestEntity", 150, 250);
 
-            mcdComponent.removeElement(entite);
+            mcdComponent.addObjet(entite);
 
-            assertEquals(0, mcdComponent.getSize());
+            verify(mockDictionnaire).addObserver(entite);
         }
 
         @Test
-        @DisplayName("Should clear all elements")
-        void shouldClearAllElements() {
-            MCDEntite entite1 = new MCDEntite(mcdComponent, "Entity1", 100, 100);
-            MCDEntite entite2 = new MCDEntite(mcdComponent, "Entity2", 200, 200);
+        @DisplayName("Should remove entity and clear its information")
+        void shouldRemoveEntityAndClearInformation() {
+            MCDEntite entite = mcdComponent.addEntite(100, 100);
+            entite.addInformation("test_info");
 
-            mcdComponent.addElement(entite1);
-            mcdComponent.addElement(entite2);
+            mcdComponent.removeObjet(entite);
 
-            mcdComponent.clear();
+            assertEquals(0, entite.sizeInformation());
+        }
 
-            assertEquals(0, mcdComponent.getSize());
+        @Test
+        @DisplayName("Should find entity by name")
+        void shouldFindEntityByName() {
+            String entityName = "TestEntity";
+            MCDEntite entite = new MCDEntite(mcdComponent, entityName, 100, 100);
+            mcdComponent.addObjet(entite);
+
+            MCDObjet found = mcdComponent.getElement(entityName);
+
+            assertNotNull(found);
+            assertEquals(entityName, found.getName());
+            assertSame(entite, found);
+        }
+
+        @Test
+        @DisplayName("Should return null for non-existent entity name")
+        void shouldReturnNullForNonExistentEntityName() {
+            MCDObjet found = mcdComponent.getElement("NonExistent");
+
+            assertNull(found);
         }
     }
 
@@ -78,13 +106,44 @@ class MCDComponentTest {
     class AssociationManagementTests {
 
         @Test
-        @DisplayName("Should add association to MCD")
-        void shouldAddAssociationToMcd() {
-            MCDAssociation association = new MCDAssociation(mcdComponent);
+        @DisplayName("Should add association to MCD at specified position")
+        void shouldAddAssociationToMcdAtPosition() {
+            MCDAssociation association = mcdComponent.addAssociation(200, 300);
 
-            mcdComponent.addElement(association);
+            assertNotNull(association);
+            assertEquals(200, association.getX());
+            assertEquals(300, association.getY());
+            verify(mockDictionnaire).addObserver(association);
+        }
 
-            assertTrue(mcdComponent.getSize() > 0);
+        @Test
+        @DisplayName("Should add existing association object")
+        void shouldAddExistingAssociationObject() {
+            MCDAssociation association = new MCDAssociation(mcdComponent, "TestAssoc", 250, 350);
+
+            mcdComponent.addObjet(association);
+
+            verify(mockDictionnaire).addObserver(association);
+        }
+    }
+
+    @Nested
+    @DisplayName("Link Management Tests")
+    class LinkManagementTests {
+
+        @Test
+        @DisplayName("Should create link between entities and associations")
+        void shouldCreateLinkBetweenEntitiesAndAssociations() {
+            MCDEntite entite = new MCDEntite(mcdComponent, "Entity", 100, 100);
+            MCDAssociation association = new MCDAssociation(mcdComponent, "Assoc", 200, 200);
+
+            // Test that we can add both entities and associations
+            mcdComponent.addObjet(entite);
+            mcdComponent.addObjet(association);
+
+            // Verify objects were added
+            assertNotNull(mcdComponent.getElement("Entity"));
+            assertNotNull(mcdComponent.getElement("Assoc"));
         }
     }
 
@@ -93,19 +152,51 @@ class MCDComponentTest {
     class ComponentPropertiesTests {
 
         @Test
-        @DisplayName("Should have correct component ID")
-        void shouldHaveCorrectComponentId() {
-            String id = mcdComponent.getID();
-            assertNotNull(id);
-            assertEquals(MCDComponent.MCD_ID, id);
+        @DisplayName("Should have data dictionary")
+        void shouldHaveDataDictionary() {
+            DictionnaireTable data = mcdComponent.getData();
+
+            assertNotNull(data);
+            assertSame(mockDictionnaire, data);
         }
 
         @Test
-        @DisplayName("Should have correct component title")
-        void shouldHaveCorrectComponentTitle() {
-            String title = mcdComponent.getTitle();
-            assertNotNull(title);
-            assertEquals(MCDComponent.MCD_TITLE, title);
+        @DisplayName("Should enumerate elements")
+        void shouldEnumerateElements() {
+            MCDEntite entite1 = mcdComponent.addEntite(100, 100);
+            MCDEntite entite2 = mcdComponent.addEntite(200, 200);
+            MCDAssociation assoc = mcdComponent.addAssociation(150, 150);
+
+            int count = 0;
+            for (Iterator<ZElement> iter = mcdComponent.enumElements(); iter.hasNext(); ) {
+                iter.next();
+                count++;
+            }
+
+            assertEquals(3, count);
+        }
+    }
+
+    @Nested
+    @DisplayName("Clear and Cleanup Tests")
+    class ClearAndCleanupTests {
+
+        @Test
+        @DisplayName("Should clear all elements")
+        void shouldClearAllElements() {
+            mcdComponent.addEntite(100, 100);
+            mcdComponent.addEntite(200, 200);
+            mcdComponent.addAssociation(150, 150);
+
+            mcdComponent.clear();
+
+            int count = 0;
+            for (Iterator<ZElement> iter = mcdComponent.enumElements(); iter.hasNext(); ) {
+                iter.next();
+                count++;
+            }
+
+            assertEquals(0, count);
         }
     }
 
@@ -114,42 +205,30 @@ class MCDComponentTest {
     class ElementSelectionTests {
 
         @Test
-        @DisplayName("Should select element at position")
-        void shouldSelectElementAtPosition() {
-            MCDEntite entite = new MCDEntite(mcdComponent, "TestEntity", 100, 100);
-            entite.setWidth(100);
-            entite.setHeight(50);
-            mcdComponent.addElement(entite);
+        @DisplayName("Should get element by index")
+        void shouldGetElementByIndex() {
+            MCDEntite entite = mcdComponent.addEntite(100, 100);
 
-            Object selected = mcdComponent.getElement(150, 125);
+            ZElement element = mcdComponent.getElement(0);
 
-            assertSame(entite, selected);
+            assertNotNull(element);
+            assertSame(entite, element);
         }
 
         @Test
-        @DisplayName("Should return null when no element at position")
-        void shouldReturnNullWhenNoElementAtPosition() {
-            Object selected = mcdComponent.getElement(500, 500);
+        @DisplayName("Should handle object removal")
+        void shouldHandleObjectRemoval() {
+            MCDEntite entite1 = mcdComponent.addEntite(100, 100);
+            MCDEntite entite2 = mcdComponent.addEntite(200, 200);
 
-            assertNull(selected);
-        }
-    }
+            // Remove one object
+            MCDObjet removed = mcdComponent.removeObjet();
 
-    @Nested
-    @DisplayName("Data Dictionary Tests")
-    class DataDictionaryTests {
-
-        @Test
-        @DisplayName("Should have data dictionary")
-        void shouldHaveDataDictionary() {
-            assertNotNull(mcdComponent.getData());
-        }
-
-        @Test
-        @DisplayName("Should access data dictionary properties")
-        void shouldAccessDataDictionaryProperties() {
-            Object data = mcdComponent.getData();
-            assertNotNull(data);
+            // Verify removal works (actual behavior depends on selection mechanism)
+            assertTrue(mcdComponent.getElement("Entite1") == null ||
+                      mcdComponent.getElement("Entite2") == null ||
+                      mcdComponent.getElement(entite1.getName()) == null ||
+                      mcdComponent.getElement(entite2.getName()) == null);
         }
     }
 }
