@@ -27,6 +27,8 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -47,6 +49,8 @@ import org.analyse.merise.rapport.MeriseRapport;
 
 public class RapportPanel extends AnalysePanel
 {
+    private static final Logger logger = Logger.getLogger(RapportPanel.class.getName());
+
     private JPanel toolbar;
 
     private BasicAction generer;
@@ -130,7 +134,7 @@ public class RapportPanel extends AnalysePanel
                 try {
                     editor.setPage(meriseRapport.createRapport());
                 } catch(IOException exc) {
-                    
+                    logger.log(Level.SEVERE, "Erreur lors de la génération du rapport", exc);
                 }
             }
         }

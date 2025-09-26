@@ -35,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -61,8 +63,9 @@ import org.analyse.main.Main;
  * Fenetre principale d'AnalyseSI
  */
 public class AnalyseFrame extends JFrame {
-	
-	public static final String DEFAULT = Constantes.DEFAULT ; 
+
+	private static final Logger logger = Logger.getLogger(AnalyseFrame.class.getName());
+	public static final String DEFAULT = Constantes.DEFAULT ;
 	public static final String HELP = Constantes.HELP;
         
 	/* Menu + Toolbar */
@@ -203,7 +206,7 @@ public class AnalyseFrame extends JFrame {
 
 			props.store(fos, "properties");
 		} catch (IOException e) {
-
+			logger.log(Level.WARNING, "Unable to save properties to file: " + Main.USER_PROPS, e);
 		}
 	}
 
@@ -264,6 +267,7 @@ public class AnalyseFrame extends JFrame {
 
 			props.store(fos, "properties");
 		} catch (IOException e) {
+			logger.log(Level.WARNING, "Unable to initialize properties file: " + Main.USER_PROPS, e);
 		}
 	}
 

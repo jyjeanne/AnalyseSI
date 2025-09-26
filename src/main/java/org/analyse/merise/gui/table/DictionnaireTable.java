@@ -31,6 +31,8 @@
 package org.analyse.merise.gui.table;
 
 import java.util.*;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -46,6 +48,8 @@ import org.analyse.merise.mcd.composant.MCDObjet;
  */
 public class DictionnaireTable extends AbstractTableModel
 {
+    private static final Logger logger = Logger.getLogger(DictionnaireTable.class.getName());
+
     public static final int UP = 0;
 
     public static final int DOWN = 1;
@@ -474,6 +478,7 @@ public class DictionnaireTable extends AbstractTableModel
             try {
                 rows.get(row)[col] = Integer.valueOf(value.toString());
             } catch (NumberFormatException e) {
+                logger.log(Level.FINE, "Invalid integer value: " + value + " for row: " + row + ", col: " + col, e);
             }
         } else {
             rows.get(row)[col] = value;

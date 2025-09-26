@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.swing.UIManager;
 import org.analyse.core.gui.ParametrageWindow;
@@ -21,6 +23,8 @@ import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 
 public final class Main
 {
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
     private Main() {}
 
     public static final String SETTINGS_DIRECTORY = System
@@ -57,7 +61,8 @@ public final class Main
             UIManager.setLookAndFeel(settings.getSelectedLookAndFeel());
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.log(Level.SEVERE, "Failed to initialize look and feel", e);
+            throw new RuntimeException("Failed to initialize look and feel: " + e.getMessage(), e);
         }
 
         splash = new SplashScreen();

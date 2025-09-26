@@ -23,6 +23,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -44,6 +46,8 @@ import org.analyse.core.util.Utilities;
  */
 public class ParametrageWindow extends JDialog implements ActionListener
 {
+    private static final Logger logger = Logger.getLogger(ParametrageWindow.class.getName());
+
     private BasicAction close;
     
     public ParametrageWindow(JFrame parent)
@@ -91,6 +95,7 @@ public class ParametrageWindow extends JDialog implements ActionListener
             //panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
             //panel.add(new JScrollPane(editor), BorderLayout.CENTER);
         } catch (Exception e) {
+            logger.log(Level.WARNING, "Erreur lors de l'initialisation du panneau de configuration", e);
         }
 
         return panel;

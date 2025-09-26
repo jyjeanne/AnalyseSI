@@ -4,6 +4,7 @@
 .project
 .classpath
 .project
+.claude
 /build
 /bin
 /doc

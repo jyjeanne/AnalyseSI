@@ -13,6 +13,8 @@ import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Parse XML documents and return parse events through call-backs.
@@ -54,6 +56,7 @@ import java.util.Stack;
  */
 public class XmlParser
 {
+    private static final Logger logger = Logger.getLogger(XmlParser.class.getName());
 
     //
     // Use special cheats that speed up the code (currently about 50%),
@@ -2769,6 +2772,7 @@ public class XmlParser
                 attribute[4] = readLiteral(LIT_NORMALIZE | LIT_CHAR_REF
                         | LIT_ENTITY_REF);
             } catch (Exception e) {
+                logger.log(Level.FINE, "Failed to expand attribute value for: " + aname, e);
             }
         }
         return (String) attribute[4];
@@ -3283,6 +3287,7 @@ public class XmlParser
             try {
                 systemId = new URL(new URL(baseURI), systemId).toString();
             } catch (Exception e) {
+                logger.log(Level.FINE, "Failed to resolve system ID: " + systemId, e);
             }
         }
 

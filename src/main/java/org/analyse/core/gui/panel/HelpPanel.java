@@ -32,6 +32,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -57,9 +59,10 @@ public class HelpPanel extends AnalysePanel implements HyperlinkListener,
         ClipboardInterface
 {
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6619857514551235043L;
+	private static final Logger logger = Logger.getLogger(HelpPanel.class.getName());
 
 	private BasicAction goback, home;
 
@@ -235,6 +238,7 @@ public class HelpPanel extends AnalysePanel implements HyperlinkListener,
                     editor.setPage(Main.class
                             .getResource("help/whatsnew.html"));
             } catch (IOException exp) {
+                logger.log(Level.WARNING, "Erreur lors de la navigation dans l'aide: " + action, exp);
             }
         }
     }

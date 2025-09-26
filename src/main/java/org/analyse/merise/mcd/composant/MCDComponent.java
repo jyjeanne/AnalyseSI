@@ -443,33 +443,39 @@ public class MCDComponent extends ZGraphique implements Observer {
 	 * Créer le MPD correspondant au MCD.
 	 */
 	public boolean buildMPD(MPDComponent mpd, int showErrors) {
-		MPDEntite ent = null , ent2 = null ;
-		MCDObjet obj;
-		MPDLien mpdLien;
-		MCDLien mcdLienAssociation  = null ; 
-		
 		if (!this.isCorrect(showErrors))
 			return false;
 
 		mpd.clearAll();
 		mpd.setWidth(this.getPreferredSize().getWidth());
 
-		/*
-		 * Création des MPDEntite à partir des MCDEntite et des MCDAssociation
-		 */
-		
+		// Création des MPDEntite à partir des MCDEntite et traitement des associations
+		return createMPDEntitiesFromMCDEntities(mpd);
+	}
+
+	/**
+	 * Crée les entités MPD à partir des entités MCD et traite les associations
+	 */
+	private boolean createMPDEntitiesFromMCDEntities(MPDComponent mpd) {
 		for (Iterator<ZElement> e = this.elementsZElements(); e.hasNext();) {
-			obj = (MCDObjet) e.next();
+			MCDObjet obj = (MCDObjet) e.next();
 
 			if (obj instanceof MCDEntite) {
-				ent = new MPDEntite(mpd, Utilities.normaliseString(obj.getName(), Constantes.LOWER));
+				MPDEntite ent = new MPDEntite(mpd, Utilities.normaliseString(obj.getName(), Constantes.LOWER));
 				ent.setPosition(new Point(obj.getX(), obj.getY()));
 				ent.addIdentifiant(obj.getCodeInformation(0));
 				ent.addInformations(obj.getInformations());
 				mpd.addMPDEntite(ent);
 			}
 		}
-		
+
+		// Variables déclarées pour le traitement des associations
+		MCDObjet obj;
+		MPDEntite ent = null;
+		MPDEntite ent2;
+		MCDLien mcdLienAssociation;
+		MPDLien mpdLien;
+
 		for (Iterator<ZElement> e = this.elementsZElements(); e.hasNext();) {
 			obj = (MCDObjet) e.next();
 			
@@ -480,22 +486,25 @@ public class MCDComponent extends ZGraphique implements Observer {
 				
 				if ( ws_typeAssociation.equals ( Constantes.PORTEUSE) ) {
 					ent = new MPDEntite(mpd, Utilities.normaliseString(obj.getName(), Constantes.LOWER));
-					
+
 					ent.setPosition(new Point(obj.getX(), obj.getY()));
-					
+
 					List<MCDLien> vLinks = ( (MCDAssociation) obj ).links ;  // Les liens de l'association sont dans un vecteur
-	
-					
+
+					// Initialisation de ent2 et mcdLienAssociation avant la boucle
+					ent2 = null;
+					mcdLienAssociation = null;
+
 					for ( int k=0; k < vLinks.size() ; k++ ) {
-						// récupération des différents liens de l'association 
+						// récupération des différents liens de l'association
 						mcdLienAssociation = vLinks.get( k );
-						
+
 						MCDEntite mcdEntite = ( MCDEntite ) mcdLienAssociation.getElement ( Constantes.MCDENTITE2 ) ;
-						
+
 						ent2 = mpd.getMPDEntite(Utilities.normaliseString (mcdEntite.getName() , Constantes.LOWER));
-						if ( ent2 == null ) 
-							ent2 = new MPDEntite(mpd, Utilities.normaliseString(mcdEntite.getName(), Constantes.LOWER));						
-							
+						if ( ent2 == null )
+							ent2 = new MPDEntite(mpd, Utilities.normaliseString(mcdEntite.getName(), Constantes.LOWER));
+
 						mpdLien = new MPDLien();
 							//ent2 = mpd.getMPDEntite(Utilities.normaliseString(mcdLienAssociation.getMCDObjet ( Constantes.MCDENTITE2 ).getName(), Constantes.LOWER));
 						//ent.addForeignKey(ent2.getCodeInformation(0), Utilities.normaliseString( ent2.getName(), Constantes.LOWER) ) ;  
@@ -512,10 +521,10 @@ public class MCDComponent extends ZGraphique implements Observer {
 					
 					ent.addInformations(obj.getInformations());   // les propriétés de la relation
 					
-					if ( vLinks.size() == 1 ) { //liaison reflexive
-						
+					if ( vLinks.size() == 1 && ent2 != null && mcdLienAssociation != null) { //liaison reflexive
+
 						MCDAssociation mCDAssociation = ( MCDAssociation ) vLinks.get(0).getElement ( Constantes.MCDENTITE1 ) ;
-						String str = Utilities.normaliseString(ent2.getCodeInformation(0),  Constantes.LOWER) + "_" + Utilities.normaliseString(mCDAssociation.getName() , Constantes.LOWER) ;						 
+						String str = Utilities.normaliseString(ent2.getCodeInformation(0),  Constantes.LOWER) + "_" + Utilities.normaliseString(mCDAssociation.getName() , Constantes.LOWER) ;
 						if ( mcdLienAssociation.getCardMin().equals( "1" ) ) {
 							ent.addIdentifiant ( str ) ;
 						} else {
@@ -547,6 +556,9 @@ public class MCDComponent extends ZGraphique implements Observer {
 						MCDEntite mcdEntite = ( MCDEntite ) mcdLienAssociation.getElement ( Constantes.MCDENTITE2 ) ;
 						
 						ent = mpd.getMPDEntite(Utilities.normaliseString (mcdEntite.getName() , Constantes.LOWER));
+						if (ent == null) {
+							continue; // Skip this iteration if entity not found
+						}
 						ent.setForeignKeyCanBeNull ( true ) ;
 						
 						// #693487 if ( mcdLienAssociation.getCardMin().equals( "1" )  && mcdLienAssociation.getCardMax().equals( "1" )  ) { 
@@ -600,10 +612,10 @@ public class MCDComponent extends ZGraphique implements Observer {
 					
 					if ( vLinks.size () == 1 )  {  //liaison reflexive
 						
-						if ( ws_typeAssociation.equals( Constantes.ZERO_UN ) ) {  
+						if ( ws_typeAssociation.equals( Constantes.ZERO_UN ) && ent != null) {
 							MCDAssociation mCDAssociation = ( MCDAssociation ) vLinks.get(0).getElement ( Constantes.MCDENTITE1 ) ;
 							MCDLien ws_lien = vLinks.get( 0 );
-							mcdEntiteAssociee = ( MCDEntite )  ws_lien.getElement( Constantes.MCDENTITE2 )  ;							
+							mcdEntiteAssociee = ( MCDEntite )  ws_lien.getElement( Constantes.MCDENTITE2 )  ;
 							ent.addInformation( mcdEntiteAssociee.getCodeInformation(0) + "_" + Utilities.normaliseString(mCDAssociation.getName() , Constantes.LOWER) ) ;
 						}
 						
@@ -621,6 +633,9 @@ public class MCDComponent extends ZGraphique implements Observer {
 							mcdEntiteAssociee = ( MCDEntite )  ws_lienAssocie.getElement( Constantes.MCDENTITE2 )  ;
 								
 							ent = mpd.getMPDEntite(Utilities.normaliseString (nameEntite , Constantes.LOWER));
+							if (ent == null) {
+								return true; // Skip if entity not found
+							}
 
                                                         /*
                                                          * Bug #520410 - voir test-007.asi
@@ -641,7 +656,10 @@ public class MCDComponent extends ZGraphique implements Observer {
 							mcdEntiteAssociee = ( MCDEntite )  ws_lienAssocie.getElement( Constantes.MCDENTITE2 )  ;
 							
 							ent = mpd.getMPDEntite(Utilities.normaliseString (nameEntite , Constantes.LOWER));
-							
+							if (ent == null) {
+								return true; // Skip if entity not found
+							}
+
 							ent.addForeignKey(mcdEntiteAssociee.getCodeInformation(0), Utilities.normaliseString( mcdEntiteAssociee.getName(), Constantes.LOWER) ) ;
 							ent.addInformation( mcdEntiteAssociee.getCodeInformation(0)) ;
 							
@@ -663,10 +681,13 @@ public class MCDComponent extends ZGraphique implements Observer {
 						MCDEntite mcdEntite = ( MCDEntite ) mcdLienAssociation.getElement ( Constantes.MCDENTITE2 ) ;
 						
 						ent = mpd.getMPDEntite(Utilities.normaliseString (mcdEntite.getName() , Constantes.LOWER));
-						
-						if ( mcdLienAssociation.getCardMin().equals( "0" ) ) 
+						if (ent == null) {
+							continue; // Skip this iteration if entity not found
+						}
+
+						if ( mcdLienAssociation.getCardMin().equals( "0" ) )
 							ent.setForeignKeyCanBeNull ( true ) ;
-						else 
+						else
 							ent.setForeignKeyCanBeNull ( false ) ;
 						
 						if ( ! mcdLienAssociation.getCardMax().equals( "N" ) ) {
@@ -727,10 +748,14 @@ public class MCDComponent extends ZGraphique implements Observer {
 					
 					}
 
-					ent = mpd.getMPDEntite(Utilities.normaliseString(
-							getMCDEntite((MCDAssociation) obj, "N").getName(),
-							Constantes.LOWER));
-					mpdLien.setElement(ent, Constantes.MCDENTITE1 );
+					MCDEntite nEntity = getMCDEntite((MCDAssociation) obj, "N");
+					if (nEntity != null) {
+						ent = mpd.getMPDEntite(Utilities.normaliseString(
+								nEntity.getName(), Constantes.LOWER));
+						if (ent != null) {
+							mpdLien.setElement(ent, Constantes.MCDENTITE1);
+						}
+					}
 
 					mpd.addLien(mpdLien);
 				}

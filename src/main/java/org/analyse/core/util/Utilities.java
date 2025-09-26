@@ -29,9 +29,13 @@ import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public final class Utilities
 {
+	private static final Logger logger = Logger.getLogger(Utilities.class.getName());
+
 	/**
 	 * Don't let anyone instantiate this class.
 	 */
@@ -65,8 +69,9 @@ public final class Utilities
 
             return res.toString();
         } catch (IOException e) {
-            System.err.println(e);
+            logger.log(Level.WARNING, "Error reading file from resource: " + filename, e);
         } catch (NullPointerException e) {
+            logger.log(Level.FINE, "Resource file not found: " + filename, e);
             return null;
         }
 
@@ -150,9 +155,9 @@ public final class Utilities
     	
     	try {
     		str = resourceBundle.getString ( key ) ; 
-    	} catch ( Exception e ){    		
+    	} catch ( Exception e ){
     		str = "? - " + key ;
-    		System.err.println(e) ;
+    		logger.log(Level.WARNING, "Missing resource key: " + key, e);
     	}
     	
     	return str ; 

@@ -439,58 +439,73 @@ public class MCDPanel extends AnalysePanel
         public void actionPerformed(ActionEvent e)
         {
             String action = e.getActionCommand();
-            
+
             if (action.equals(Constantes.ADD_ENT)) {
-            	typeAction = Constantes.ADD_ENT;
-            	mcdComponent.setEnabled(false);
-            	deselectToolbarButton((JToggleButton)e.getSource());
-            } 
-            if (action.equals(Constantes.ADD_ASS)) {
-            	typeAction = Constantes.ADD_ASS;
-            	mcdComponent.setEnabled(false);
-            	deselectToolbarButton((JToggleButton)e.getSource());
-            } 
-            
-            if (action.equals(Constantes.ADD_LIEN)) {
-            	typeAction = Constantes.ADD_LIEN;
-            	mcdComponent.setEnabled(true);
-            	deselectToolbarButton((JToggleButton)e.getSource());
-            	if (btnLien.getSelectedObjects() != null)
-                    mcdComponent.addLien();
-            } 
-            
-            if(action.equals(Constantes.CHANGE_CURSEUR)) {
-            	typeAction = Constantes.CHANGE_CURSEUR;
-            	mcdComponent.annulerCreerLien();
-            	mcdComponent.setEnabled(true);
-                deselectToolbarButton((JToggleButton)e.getSource());  	
-            } 
-            if (action.equals(Constantes.DEL_LIEN)) {
-                String mess = Utilities.getLangueMessage ("supprimer_lien_selection") ;
-                if (JOptionPane.showConfirmDialog(null, mess, Utilities.getLangueMessage ("analysesi"),
-                        JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
-                    return;
-                mcdComponent.removeLien();
-            } 
-            
-            if (action.equals(Constantes.DEL_OBJET)) {
-            	deleteObjects();
-            } 
-            if (action.equals(Constantes.MOD_OBJET)) {
+                handleAddEntity(e);
+            } else if (action.equals(Constantes.ADD_ASS)) {
+                handleAddAssociation(e);
+            } else if (action.equals(Constantes.ADD_LIEN)) {
+                handleAddLink(e);
+            } else if (action.equals(Constantes.CHANGE_CURSEUR)) {
+                handleChangeCursor(e);
+            } else if (action.equals(Constantes.DEL_LIEN)) {
+                handleDeleteLink();
+            } else if (action.equals(Constantes.DEL_OBJET)) {
+                deleteObjects();
+            } else if (action.equals(Constantes.MOD_OBJET)) {
                 entiteDialog.load(objet);
-            } 
-            if (action.equals(Constantes.MOD_LIEN)) {
+            } else if (action.equals(Constantes.MOD_LIEN)) {
                 lienDialog.load(lien);
-            } 
-            if (action.equals(Constantes.VERIF_MCD)) {
+            } else if (action.equals(Constantes.VERIF_MCD)) {
                 mcdComponent.isCorrect(Constantes.SHOW_ALL);
-            } 
-            if (action.equals(Constantes.BUILD_MPD)) {
-                if ( mcdComponent.buildMPD(mpdComponent,  Constantes.CREATE_MCD) ) {                	
-                	mpdComponent.buildSQL(mcdComponent.getData(), sqlCommand);
-                	mldComponent.buildMLD(mpdComponent, mldCommand);                                         
-                }
-            } 
+            } else if (action.equals(Constantes.BUILD_MPD)) {
+                handleBuildMPD();
+            } else if (action.equals(Constantes.SAVE_GRAPH)) {
+                handleSaveGraph();
+            }
+        }
+
+        private void handleAddEntity(ActionEvent e) {
+            typeAction = Constantes.ADD_ENT;
+            mcdComponent.setEnabled(false);
+            deselectToolbarButton((JToggleButton)e.getSource());
+        }
+
+        private void handleAddAssociation(ActionEvent e) {
+            typeAction = Constantes.ADD_ASS;
+            mcdComponent.setEnabled(false);
+            deselectToolbarButton((JToggleButton)e.getSource());
+        }
+
+        private void handleAddLink(ActionEvent e) {
+            typeAction = Constantes.ADD_LIEN;
+            mcdComponent.setEnabled(true);
+            deselectToolbarButton((JToggleButton)e.getSource());
+            if (btnLien.getSelectedObjects() != null)
+                mcdComponent.addLien();
+        }
+
+        private void handleChangeCursor(ActionEvent e) {
+            typeAction = Constantes.CHANGE_CURSEUR;
+            mcdComponent.annulerCreerLien();
+            mcdComponent.setEnabled(true);
+            deselectToolbarButton((JToggleButton)e.getSource());
+        }
+
+        private void handleDeleteLink() {
+            String mess = Utilities.getLangueMessage("supprimer_lien_selection");
+            if (JOptionPane.showConfirmDialog(null, mess, Utilities.getLangueMessage("analysesi"),
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                mcdComponent.removeLien();
+            }
+        } 
+
+        private void handleBuildMPD() {
+            if (mcdComponent.buildMPD(mpdComponent, Constantes.CREATE_MCD)) {
+                mpdComponent.buildSQL(mcdComponent.getData(), sqlCommand);
+                mldComponent.buildMLD(mpdComponent, mldCommand);
+            }
+        } 
             /*
             if (action.equals(Constantes.BUILD_MLD)) {
                     if ( mcdComponent.buildMPD(mpdComponent,  Constantes.CREATE_MCD) ) {
@@ -500,50 +515,48 @@ public class MCDPanel extends AnalysePanel
                     }
             }
               */  
-                
-            if (action.equals(Constantes.SAVE_GRAPH)) {
-                String fileName = chooseFile();
-                if (fileName == null)
-                    return;
 
-                if (!Utilities.getExtension(fileName).equals(Constantes.PNG_MINUSCULE)
-                        && !Utilities.getExtension(fileName).equals(Constantes.PNG))
-                    fileName = fileName + "." + Constantes.PNG_MINUSCULE ;
+        private void handleSaveGraph() {
+            String fileName = chooseFile();
+            if (fileName == null)
+                return;
 
-                mcdComponent.enleverFocus();
+            if (!Utilities.getExtension(fileName).equals(Constantes.PNG_MINUSCULE)
+                    && !Utilities.getExtension(fileName).equals(Constantes.PNG))
+                fileName = fileName + "." + Constantes.PNG_MINUSCULE;
 
-                try {
-                    File imageFile;
-                    FileImageOutputStream outputStream;
-                    BufferedImage img;
-                    Graphics g;
-                    Graphics2D g2d;
-                    Rectangle2D r;
+            mcdComponent.enleverFocus();
+            saveGraphToFile(fileName);
+        }
 
-                    imageFile = new File(fileName);
-                    img = new BufferedImage(
-                            (int) (mcdComponent.getPreferredSize().getWidth()),
-                            (int) (mcdComponent.getPreferredSize().getHeight()),
-                            BufferedImage.TYPE_INT_RGB);
-
-                    g = img.getGraphics();
-                    g2d = (Graphics2D) g;
-
-                    g2d.setColor(new Color(255, 255, 255));
-                    r = new Rectangle2D.Double(0, 0, img.getWidth(), img
-                            .getHeight());
-                    g2d.fill(r);
-
-                    mcdComponent.paintComponent(g2d);
-
-                    outputStream = new FileImageOutputStream(imageFile);
-                    ImageIO.write(img, "png", outputStream);
-                    outputStream.close();
-
-                } catch (IOException err) {
-                    GUIUtilities.error("Impossible de sauvegarder le fichier " + fileName);
-                }
+        private void saveGraphToFile(String fileName) {
+            try {
+                BufferedImage img = createGraphImage();
+                writeImageToFile(img, fileName);
+            } catch (IOException err) {
+                GUIUtilities.error("Impossible de sauvegarder le fichier " + fileName);
             }
+        }
+
+        private BufferedImage createGraphImage() {
+            int width = (int) mcdComponent.getPreferredSize().getWidth();
+            int height = (int) mcdComponent.getPreferredSize().getHeight();
+            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+            Graphics2D g2d = (Graphics2D) img.getGraphics();
+            g2d.setColor(new Color(255, 255, 255));
+            Rectangle2D r = new Rectangle2D.Double(0, 0, img.getWidth(), img.getHeight());
+            g2d.fill(r);
+            mcdComponent.paintComponent(g2d);
+
+            return img;
+        }
+
+        private void writeImageToFile(BufferedImage img, String fileName) throws IOException {
+            File imageFile = new File(fileName);
+            FileImageOutputStream outputStream = new FileImageOutputStream(imageFile);
+            ImageIO.write(img, "png", outputStream);
+            outputStream.close();
         }
     }
 

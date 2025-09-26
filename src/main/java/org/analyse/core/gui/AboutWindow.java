@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -48,6 +50,8 @@ import org.analyse.main.Main;
  */
 public class AboutWindow extends JDialog implements ActionListener
 {
+    private static final Logger logger = Logger.getLogger(AboutWindow.class.getName());
+
     private BasicAction close;
     
     public AboutWindow(JFrame parent)
@@ -93,6 +97,7 @@ public class AboutWindow extends JDialog implements ActionListener
 
             panel.add(new JScrollPane(editor), BorderLayout.CENTER);
         } catch (IOException e) {
+            logger.log(Level.WARNING, "Erreur lors du chargement du fichier whatsnew.html", e);
         }
 
         return panel;
