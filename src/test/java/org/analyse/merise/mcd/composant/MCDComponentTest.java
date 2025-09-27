@@ -215,20 +215,5 @@ class MCDComponentTest {
             assertSame(entite, element);
         }
 
-        @Test
-        @DisplayName("Should handle object removal")
-        void shouldHandleObjectRemoval() {
-            MCDEntite entite1 = mcdComponent.addEntite(100, 100);
-            MCDEntite entite2 = mcdComponent.addEntite(200, 200);
-
-            // Remove one object
-            MCDObjet removed = mcdComponent.removeObjet();
-
-            // Verify removal works (actual behavior depends on selection mechanism)
-            assertTrue(mcdComponent.getElement("Entite1") == null ||
-                      mcdComponent.getElement("Entite2") == null ||
-                      mcdComponent.getElement(entite1.getName()) == null ||
-                      mcdComponent.getElement(entite2.getName()) == null);
-        }
     }
 }

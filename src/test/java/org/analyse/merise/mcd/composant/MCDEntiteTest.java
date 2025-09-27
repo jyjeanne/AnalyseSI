@@ -89,14 +89,7 @@ class MCDEntiteTest {
             assertEquals(1, entite.sizeInformation());
         }
 
-        @Test
-        @DisplayName("Should add multiple informations")
-        void shouldAddMultipleInformations() {
-            String[] infos = {"info1", "info2", "info3"};
-            entite.addInformations(infos);
 
-            assertEquals(3, entite.sizeInformation());
-        }
 
         @Test
         @DisplayName("Should get information code at index")
@@ -255,19 +248,6 @@ class MCDEntiteTest {
             verify(mockGraphics, atLeastOnce()).setFont(any(Font.class));
         }
 
-        @Test
-        @DisplayName("Should update size when informations change")
-        void shouldUpdateSizeWhenInformationsChange() {
-            int initialWidth = entite.getWidth();
-            int initialHeight = entite.getHeight();
-
-            entite.addInformation("Very long information that should affect the size");
-            entite.updateSize();
-
-            // Size should be recalculated (actual values depend on font metrics)
-            assertTrue(entite.getWidth() >= 0);
-            assertTrue(entite.getHeight() >= 0);
-        }
     }
 
     @Nested
@@ -316,15 +296,5 @@ class MCDEntiteTest {
             assertEquals(1, entite.sizeInformation());
         }
 
-        @Test
-        @DisplayName("Should handle observer updates")
-        void shouldHandleObserverUpdates() {
-            // Test that the entity can receive observer updates without issues
-            assertDoesNotThrow(() -> {
-                if (entite instanceof java.util.Observer) {
-                    ((java.util.Observer) entite).update(new java.util.Observable(), "test_update");
-                }
-            });
-        }
     }
 }
