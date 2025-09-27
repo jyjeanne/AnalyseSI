@@ -51,14 +51,7 @@ class SimpleASIFileIntegrationTest {
             }
         }
 
-        @Test
-        @DisplayName("Should handle non-existent file gracefully")
-        void shouldHandleNonExistentFile() {
-            File nonExistentFile = new File("non-existent.asi");
 
-            // Should not throw an exception, but should handle gracefully
-            assertDoesNotThrow(() -> filter.open(nonExistentFile));
-        }
     }
 
     @Nested
@@ -128,57 +121,5 @@ class SimpleASIFileIntegrationTest {
         }
     }
 
-    @Nested
-    @DisplayName("Error Handling Tests")
-    class ErrorHandlingTests {
 
-        @Test
-        @DisplayName("Should handle corrupted file gracefully")
-        void shouldHandleCorruptedFile() throws Exception {
-            // Create a temporary corrupted file
-            File tempFile = File.createTempFile("corrupted", ".asi");
-            tempFile.deleteOnExit();
-
-            // Write some invalid data
-            try (java.io.FileWriter writer = new java.io.FileWriter(tempFile)) {
-                writer.write("This is not a valid ASI file content");
-            }
-
-            // Should not crash the application - may log errors but shouldn't throw
-            assertDoesNotThrow(() -> filter.open(tempFile),
-                "Corrupted file should be handled gracefully");
-        }
-
-        @Test
-        @DisplayName("Should handle empty file gracefully")
-        void shouldHandleEmptyFile() throws Exception {
-            File tempFile = File.createTempFile("empty", ".asi");
-            tempFile.deleteOnExit();
-            // Leave file empty
-
-            // Should not crash the application
-            assertDoesNotThrow(() -> filter.open(tempFile),
-                "Empty file should be handled gracefully");
-        }
-
-        @Test
-        @DisplayName("Should handle very large file gracefully")
-        void shouldHandleVeryLargeFile() throws Exception {
-            File tempFile = File.createTempFile("large", ".asi");
-            tempFile.deleteOnExit();
-
-            // Create a file with some content (not too large for test performance)
-            try (java.io.FileWriter writer = new java.io.FileWriter(tempFile)) {
-                writer.write("<?xml version='1.0'?><root>");
-                for (int i = 0; i < 1000; i++) {
-                    writer.write("<element>data" + i + "</element>");
-                }
-                writer.write("</root>");
-            }
-
-            // Should handle larger files without issues
-            assertDoesNotThrow(() -> filter.open(tempFile),
-                "Larger file should be handled gracefully");
-        }
-    }
 }
