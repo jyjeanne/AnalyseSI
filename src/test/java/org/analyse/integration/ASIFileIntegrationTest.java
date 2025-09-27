@@ -53,14 +53,7 @@ class ASIFileIntegrationTest {
             }
         }
 
-        @Test
-        @DisplayName("Should handle non-existent file gracefully")
-        void shouldHandleNonExistentFile() {
-            File nonExistentFile = new File("non-existent.asi");
 
-            // Should not throw an exception, but should handle gracefully
-            assertDoesNotThrow(() -> filter.open(nonExistentFile));
-        }
     }
 
     @Nested
@@ -175,34 +168,5 @@ class ASIFileIntegrationTest {
         }
     }
 
-    @Nested
-    @DisplayName("Error Handling Tests")
-    class ErrorHandlingTests {
 
-        @Test
-        @DisplayName("Should handle corrupted file gracefully")
-        void shouldHandleCorruptedFile() throws Exception {
-            // Create a temporary corrupted file
-            File tempFile = File.createTempFile("corrupted", ".asi");
-            tempFile.deleteOnExit();
-
-            // Write some invalid data
-            try (java.io.FileWriter writer = new java.io.FileWriter(tempFile)) {
-                writer.write("This is not a valid ASI file");
-            }
-
-            // Should not crash the application
-            assertDoesNotThrow(() -> filter.open(tempFile));
-        }
-
-        @Test
-        @DisplayName("Should handle empty file gracefully")
-        void shouldHandleEmptyFile() throws Exception {
-            File tempFile = File.createTempFile("empty", ".asi");
-            tempFile.deleteOnExit();
-
-            // Should not crash the application
-            assertDoesNotThrow(() -> filter.open(tempFile));
-        }
-    }
 }

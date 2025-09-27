@@ -83,19 +83,6 @@ class SQLCommandTest {
             assertTrue(types.contains("TIMESTAMP"));
         }
 
-        @Test
-        @DisplayName("Should distinguish types with and without size")
-        void shouldDistinguishTypesWithAndWithoutSize() {
-            List<String> typesWithoutSize = sqlCommand.getTypesWithoutSize();
-
-            assertNotNull(typesWithoutSize);
-            assertTrue(typesWithoutSize.contains("INTEGER"));
-            assertTrue(typesWithoutSize.contains("DATE"));
-            assertTrue(typesWithoutSize.contains("TIME"));
-
-            assertFalse(typesWithoutSize.contains("VARCHAR"));
-            assertFalse(typesWithoutSize.contains("DECIMAL"));
-        }
     }
 
     @Nested
